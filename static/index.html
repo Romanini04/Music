@@ -223,7 +223,7 @@ svg { display: block; }
 
 <script>
 // ── Backend URL ───────────────────────────────────────────────────────
-let BASE = localStorage.getItem('musicapp_backend') || '';
+let BASE = localStorage.getItem('musicapp_backend') || window.location.origin;
 
 function setStatus(state, msg) {
   document.getElementById('dot').className = 'dot ' + state;
@@ -232,11 +232,9 @@ function setStatus(state, msg) {
 
 async function checkBackend() {
   if (!BASE) {
-    setStatus('err', 'Configura la URL del servidor ↓');
-    document.getElementById('configBanner').style.display = 'flex';
-    document.getElementById('configBanner').style.flexDirection = 'column';
-    return false;
+    BASE = window.location.origin;
   }
+  document.getElementById('configBanner').style.display = 'none';
   try {
     const r = await fetch(`${BASE}/search?q=test`, { signal: AbortSignal.timeout(10000) });
     if (r.ok) { setStatus('ok', 'Servidor conectado ✓'); return true; }
